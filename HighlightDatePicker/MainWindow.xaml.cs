@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Windows;
 
@@ -23,7 +24,39 @@ namespace HighlightDatePickerDemo
             InitializeComponent();
         }
 
-        public DateTime SelectedDate { get; set; }
+        private string holidayName;
+        private DateTime holidayNameDate;
+        public string HolidayName
+        {
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(holidayName) && DateTime.Compare(holidayNameDate.Date, selectedDate.Date) == 0)
+                {
+                    return holidayName;
+                }
+                holidayName = null;
+                return _highlightedDates
+                    .FirstOrDefault(h => 
+                        DateTime.Compare(h.Date.Date, selectedDate.Date) == 0)?.Description ?? "";
+            }
+            set
+            {
+                holidayName = value;
+                holidayNameDate = selectedDate;
+                OnPropertyChanged(() => HolidayName);
+            }
+        }
+
+        private DateTime selectedDate;
+        public DateTime SelectedDate {
+            get { return selectedDate; }
+            set
+            {
+                selectedDate = value;
+                OnPropertyChanged(() => SelectedDate);
+                OnPropertyChanged(() => HolidayName);
+            }
+        }
 
         public IList<HighlightedDate> HighlightedDates
         {
@@ -35,12 +68,38 @@ namespace HighlightDatePickerDemo
             }
         }
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private void RefreshHolidays_OnClick(object sender, RoutedEventArgs e)
         {
-            HighlightedDates = new ObservableCollection<HighlightedDate>(HighlightedDates) 
+            SelectedDate = DateTime.Today.Date;
+        }
+
+        private void SetHoliday_OnClick(object sender, RoutedEventArgs e)
+        {
+            var before = _highlightedDates.ToArray();
+            var found = _highlightedDates.FirstOrDefault(h => DateTime.Compare(h.Date.Date, SelectedDate.Date) == 0);
+            if (found == null)
             {
-                new HighlightedDate(DateTime.Today, "Today")
-            };
+                HighlightedDates = new ObservableCollection<HighlightedDate>(before)
+                {
+                    new HighlightedDate(SelectedDate.Date,holidayName)
+                };
+            } else
+            {
+                found.Description = holidayName;
+                HolidayName = null;
+            }
+        }
+
+        private void DeleteHoliday_OnClick(object sender, RoutedEventArgs e)
+        {
+            var before = _highlightedDates.ToList();
+            var found = _highlightedDates.FirstOrDefault(h => DateTime.Compare(h.Date.Date, SelectedDate.Date) == 0);
+            if (found != null)
+            {
+                before.Remove(found);
+                HighlightedDates = before;
+                HolidayName = null;
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

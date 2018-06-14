@@ -4,14 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:hdp="clr-namespace:HighlightDatePickerDemo"
-        mc:Ignorable="d" Title="HighlightDatePicker test" Height="350" Width="525" 
+        mc:Ignorable="d" Title="Platt's Holidays" Height="480" Width="480" 
         x:Name="MyWindow" DataContext="{Binding ElementName=MyWindow}">
 
     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                       
-        <hdp:HighlightDatePicker SelectedDate="{Binding SelectedDate}" HighlightedDates="{Binding HighlightedDates}" HighlightBrush="LawnGreen" />
-        
-        <Button Click="ButtonBase_OnClick" Margin="0,10,0,0">Highlight today</Button>
+
+        <Viewbox Height="300" Width="300">
+            <hdp:CustomCalendar DisplayDate="{Binding SelectedDate}" SelectedDate="{Binding SelectedDate}"   HighlightedDates="{Binding HighlightedDates}" HighlightBrush="LawnGreen"  
+                             hdp:CalandarHelper.SingleClickDefocus="True"    />
+        </Viewbox>
+        <TextBlock Text="{Binding SelectedDate, StringFormat=d}" />
+        <TextBox Text="{Binding HolidayName}" />
+        <Button Click="SetHoliday_OnClick" Margin="0,10,0,0">Set holiday</Button>
+        <Button Click="DeleteHoliday_OnClick" Margin="0,10,0,0">Delete holiday</Button>
+        <Button Click="RefreshHolidays_OnClick" Margin="0,10,0,0">Refresh holidays</Button>
     </StackPanel>
 
 </Window>

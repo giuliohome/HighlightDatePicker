@@ -13,15 +13,15 @@
                 <DataTrigger.Binding>
                     <MultiBinding Converter="{StaticResource DateIsInListConverter}">
                         <Binding />
-                        <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=hdp:HighlightDatePicker}" Path="HighlightedDates" />
+                        <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=hdp:CustomCalendar}" Path="HighlightedDates" />
                     </MultiBinding>
                 </DataTrigger.Binding>
-                <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=hdp:HighlightDatePicker}, Path=HighlightBrush}" />
+                <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=hdp:CustomCalendar}, Path=HighlightBrush}" />
                 <Setter Property="ToolTip">
                     <Setter.Value>
                         <MultiBinding Converter="{StaticResource HighlightedDateDescriptionConverter}">
                             <Binding />
-                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=hdp:HighlightDatePicker}" Path="HighlightedDates" />
+                            <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType=hdp:CustomCalendar}" Path="HighlightedDates" />
                         </MultiBinding>
                     </Setter.Value>
                 </Setter>
@@ -29,12 +29,9 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="CustomCalendarStyle" TargetType="{x:Type Calendar}" BasedOn="{StaticResource {x:Type Calendar}}">
+    <Style TargetType="hdp:CustomCalendar" BasedOn="{StaticResource {x:Type Calendar}}">
         <Setter Property="CalendarDayButtonStyle" Value="{StaticResource CustomCalendarDayButtonStyle}" />
     </Style>
 
-    <Style TargetType="hdp:HighlightDatePicker" BasedOn="{StaticResource {x:Type DatePicker}}">
-        <Setter Property="CalendarStyle" Value="{StaticResource CustomCalendarStyle}" />
-    </Style>
-
+    
 </ResourceDictionary>
